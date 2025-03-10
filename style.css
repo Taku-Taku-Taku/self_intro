@@ -1,0 +1,100 @@
+/* 全体の基本設定 */
+body {
+    font-family: "MS Gothic", Arial, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    /* サイドバーとメインコンテンツを横並びに配置 */
+    height: 100vh;
+    /* ビューポート全体の高さを確保 */
+}
+
+/* サイドバーのスタイル */
+.sidebar {
+    width: 20%;
+    /* サイドバーの幅 */
+    background-color: #f4f4f4;
+    /* サイドバーの背景色 */
+    border-right: 1px solid #ccc;
+    /* サイドバー右側の境界線 */
+    padding: 10px;
+    box-sizing: border-box;
+    /* パディングを含めて幅を計算 */
+    height: 100vh;
+    /* サイドバーの高さを画面全体に設定 */
+}
+
+/* サイドバー内のリンクリスト */
+.sidebar ul {
+    list-style-type: none;
+    /* リストマーカーを非表示 */
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 20px;
+    /* 各項目間に縦方向の余白を追加 */
+    display: flex;
+    /* 丸いデザインとテキストを横並びに配置 */
+    align-items: center;
+    /* 丸いデザインとテキストを縦方向に中央揃え */
+    text-decoration: underline;
+}
+
+.sidebar ul li::before {
+    content: "";
+    /* 擬似要素で丸いデザインを作成 */
+    display: inline-block;
+    width: 0.5em;
+    /* 丸の直径 */
+    height: 0.5em;
+    /* 丸の直径 */
+    border-radius: 50%;
+    /* 丸くする */
+    margin-right: 0.5em;
+    /* テキストとの間に余白を追加 */
+}
+
+.sidebar ul li:nth-child(1)::before {
+    background-color: #ff4500;
+}
+
+.sidebar ul li:nth-child(2)::before {
+    background-color: #32cd32;
+}
+
+.sidebar ul li:nth-child(3)::before {
+    background-color: #1e90ff;
+}
+
+.sidebar ul li a {
+    font-size: calc(1vw + 0.5em);
+    /* サイドバーの幅に基づいて文字サイズを動的に調整 */
+    white-space: nowrap;
+    /* 折り返しを防止して1行に収める */
+    overflow-x: hidden;
+    /* 横スクロールを防止 */
+    text-decoration: none;
+    /* リンク下線を非表示 */
+    color: #0000ff;
+    /* リンク色（青） */
+}
+
+/* メインコンテンツのスタイル */
+.main-content {
+    flex-grow: 1;
+    /* 残りのスペースを占有 */
+    padding: 20px;
+    box-sizing: border-box;
+    /* パディングを含めて幅を計算 */
+}
+
+/* メインコンテンツ内の画像スタイル */
+.main-content img {
+    max-width: 50%;
+    /* 親要素の幅に収まるように設定 */
+    height: auto;
+    /* アスペクト比を維持しつつ高さを自動調整 */
+}
