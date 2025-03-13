@@ -7,7 +7,7 @@ body {
     padding: 0;
     display: flex;
     /* サイドバーとメインコンテンツを横並びに配置 */
-    height: 100vh;
+    min-height: 100vh;
     /* ビューポート全体の高さを確保 */
 }
 
@@ -22,8 +22,6 @@ body {
     padding: 10px;
     box-sizing: border-box;
     /* パディングを含めて幅を計算 */
-    height: 100vh;
-    /* サイドバーの高さを画面全体に設定 */
 }
 
 /* サイドバー内のリンクリスト */
