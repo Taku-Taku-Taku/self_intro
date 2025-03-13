@@ -91,7 +91,7 @@ body {
 
 /* メインコンテンツ内の画像スタイル */
 .main-content img {
-    max-width: 50%;
+    max-width: 40%;
     /* 親要素の幅に収まるように設定 */
     height: auto;
     /* アスペクト比を維持しつつ高さを自動調整 */
