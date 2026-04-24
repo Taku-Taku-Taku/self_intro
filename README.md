@@ -25,8 +25,9 @@ Taku_Taku_Takuの自己紹介用のHP
 - HTML
 - CSS
 
-## 今後の展望
-- 自ドメインでの公開
-- メアドの効率化
-- JSを用いたオシャレなデザイン
-- レスポンシブデザインの設定
+# 技術説明
+- blue_water_lily_edit_large.jpg: アイコン画像（画質そのまま）
+- blue_water_lily_fabicon.png: ファビコン画像（画質低め）
+- CNAME: ドメイン設定用
+- index.html: ページ用HTML
+- style.css: ページ装飾用CSS
