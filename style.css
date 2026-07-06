@@ -1,3 +1,27 @@
+/* =========================================
+   デザイントークン
+   カラーはアイコン（モネ「睡蓮」）モチーフの青緑系
+   ========================================= */
+:root {
+    /* カラー */
+    --color-bg: #f7f8f6;
+    --color-text: #2e3a3f;
+    --color-accent: #1a5f7a;
+    --color-accent-soft: #dcebef;
+    --color-muted: #5f7078;
+    --color-border: #e2e8e5;
+
+    /* 余白 */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+
+    /* レイアウト */
+    --content-width: 720px;
+}
+
 *,
 *::before,
 *::after {
@@ -11,45 +35,117 @@ body {
     line-height: 1.7;
     font-style: normal;
 
-    margin: 0;
+    margin: 0 auto;
     min-height: 100vh;
+    max-width: var(--content-width);
+    padding: var(--space-lg) var(--space-md) var(--space-xl);
+
+    background-color: var(--color-bg);
+    color: var(--color-text);
 
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-
-
-    padding: 20px;
-    box-sizing: border-box;
 }
 
-img {
-    /* アイコンの設定 */
+/* ===== 見出し ===== */
+h1 {
+    margin-block: var(--space-md) var(--space-xl);
+    text-align: center;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+h1::after {
+    /* 見出し下のアクセントバー */
+    content: "";
     display: block;
-    margin: 1.5em auto;
-    max-width: min(80%, 400px);
-    height: auto;
-
+    width: 3.5em;
+    height: 4px;
+    margin: var(--space-sm) auto 0;
+    border-radius: 2px;
+    background-color: var(--color-accent);
 }
 
+h2 {
+    margin-block: 0 var(--space-md);
+    padding-left: var(--space-sm);
+    border-left: 5px solid var(--color-accent);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+/* ===== セクション間の余白（hr の代わり） ===== */
+body>div {
+    margin-block-end: var(--space-xl);
+}
+
+body>div:last-child {
+    margin-block-end: 0;
+}
+
+/* .what-i-do 内の2つ目の見出し（Club） */
+div h2+ul+h2,
+div ul+h2 {
+    margin-block-start: var(--space-xl);
+}
+
+/* ===== プロフィール画像（角丸） ===== */
+img {
+    display: block;
+    width: min(50%, 180px);
+    height: auto;
+    margin: var(--space-md) auto var(--space-lg);
+    border-radius: 10%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 12px rgba(26, 95, 122, 0.18);
+}
+
+/* ===== リンク ===== */
+a {
+    color: var(--color-accent);
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s ease;
+}
+
+a:hover,
+a:focus-visible {
+    text-decoration-color: currentColor;
+}
+
+/* ===== リスト ===== */
 ul {
     margin-block: 0.5em 1.0em;
     padding-inline-start: 1.25rem;
-
 }
 
 ul li {
     margin-block: 0.4em;
 }
 
-
 ul ul {
     margin-block: 0.25em;
 }
 
-hr {
-    margin-block: 0.1em 0.4em;
+ul li::marker {
+    color: var(--color-accent);
 }
 
+/* ===== 開閉UI（温泉ランキング） ===== */
+details {
+    margin-block-start: var(--space-md);
+}
+
+summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+/* ===== プロフィール・連絡先のラベル ===== */
 .profile-title {
     display: inline-block;
     width: 4.5em;
