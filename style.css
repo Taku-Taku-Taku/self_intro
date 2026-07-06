@@ -250,11 +250,20 @@ summary {
     color: var(--color-accent);
 }
 
-/* ===== プロフィール・連絡先のラベル ===== */
-.profile-title {
-    display: inline-block;
-    width: 4.5em;
+/* ===== プロフィールの定義リスト（折り返しても値の位置で揃う） ===== */
+.profile-list {
+    display: grid;
+    grid-template-columns: 4.5em 1fr;
+    row-gap: 0.4em;
+    margin-block: 0 1em;
+}
+
+.profile-list dt {
     font-weight: bold;
+}
+
+.profile-list dd {
+    margin: 0;
 }
 
 .contact-title {
