@@ -155,11 +155,27 @@ h2 {
 }
 
 /* ===== セクション間の余白（hr の代わり） ===== */
-main>div {
+main>section {
     margin-block-end: var(--space-xl);
 }
 
-main>div:last-child {
+main>section:last-child {
+    margin-block-end: 0;
+}
+
+/* ===== フッター（Link / Contact） ===== */
+footer {
+    max-width: var(--content-width);
+    margin-inline: auto;
+    padding: var(--space-lg) var(--space-md) var(--space-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+footer>div {
+    margin-block-end: var(--space-lg);
+}
+
+footer>div:last-child {
     margin-block-end: 0;
 }
 
