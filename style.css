@@ -180,8 +180,7 @@ footer>div:last-child {
 }
 
 /* .what-i-do 内の2つ目の見出し（Club） */
-div h2+ul+h2,
-div ul+h2 {
+section ul+h2 {
     margin-block-start: var(--space-xl);
 }
 
