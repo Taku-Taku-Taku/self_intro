@@ -54,12 +54,20 @@ main {
 /* ===== ヒーロー（ファーストビュー） ===== */
 .hero {
     position: relative;
+    /* .hero-bg の z-index:-1 をこの要素内に閉じ込める（背面に潜る事故防止） */
+    isolation: isolate;
     overflow: hidden;
     min-height: clamp(440px, 78vh, 700px);
     display: grid;
     place-items: center;
     padding: var(--space-xl) var(--space-md);
     text-align: center;
+}
+
+.hero-inner {
+    /* gridアイテムがmin-content幅に引っ張られて横にはみ出すのを防ぐ */
+    width: 100%;
+    min-width: 0;
 }
 
 .hero-bg {
@@ -115,6 +123,7 @@ h1 {
 .hero-tagline {
     margin-block: 0 var(--space-md);
     color: var(--color-muted);
+    overflow-wrap: anywhere;
 }
 
 .hero-tags {
@@ -125,6 +134,7 @@ h1 {
     margin: 0 0 var(--space-lg);
     padding: 0;
     list-style: none;
+    max-width: 100%;
 }
 
 .hero-tags li {
@@ -143,6 +153,7 @@ h1 {
     justify-content: center;
     gap: var(--space-sm);
     margin: 0;
+    max-width: 100%;
 }
 
 .btn {

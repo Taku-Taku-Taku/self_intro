@@ -156,7 +156,11 @@ function initInk() {
         }
     }
     resize();
-    new ResizeObserver(resize).observe(bg);
+    if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(resize).observe(bg);
+    } else {
+        window.addEventListener('resize', resize);
+    }
 
     const FRAME_MS = 1000 / 30; /* 30fps上限（モバイルの電池・発熱対策） */
     let simTime = 0; /* 描画していた時間だけを積算（停止からの復帰でジャンプさせない） */
@@ -195,11 +199,13 @@ function initInk() {
         }
     }
 
-    /* ヒーローが画面外・タブ非表示のときは描画を止める */
-    new IntersectionObserver((entries) => {
-        inView = entries[0].isIntersecting;
-        updateRunning();
-    }).observe(bg);
+    /* ヒーローが画面外・タブ非表示のときは描画を止める（非対応なら常時描画にフォールバック） */
+    if (typeof IntersectionObserver !== 'undefined') {
+        new IntersectionObserver((entries) => {
+            inView = entries[0].isIntersecting;
+            updateRunning();
+        }).observe(bg);
+    }
     document.addEventListener('visibilitychange', () => {
         visible = !document.hidden;
         updateRunning();
