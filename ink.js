@@ -49,7 +49,7 @@ void main() {
     vec2 p = uv;
     p.x *= u_resolution.x / u_resolution.y;
 
-    float t = u_time * 0.025;
+    float t = u_time * 0.06;
 
     /* 中スケールのノイズ＋ワープで、中くらいのにじみが画面に数個散らばるようにする */
     vec2 q = vec2(
@@ -58,17 +58,21 @@ void main() {
     );
     float f = fbm(p * 1.1 + 2.2 * q + vec2(t * 0.5, 0.0));
 
-    /* しきい値を狭くとり、にじみの輪郭をはっきり出す（大部分は白い余白のまま） */
-    float ink = smoothstep(0.46, 0.58, f);
+    /* しきい値はやや広めにとり、輪郭は残しつつ塊のべったり感を抑える */
+    float ink = smoothstep(0.43, 0.66, f);
 
-    vec3 col = mix(u_colBase, u_colInk, ink * 0.5);
+    /* 別のゆっくり流れるノイズで濃度を変調（濃くなったり薄くなったり） */
+    float dens = fbm(p * 0.7 + vec2(7.3 - t * 0.8, 2.1 + t * 0.5));
+    float strength = mix(0.28, 0.72, smoothstep(0.3, 0.7, dens));
+
+    vec3 col = mix(u_colBase, u_colInk, ink * strength);
 
     /* 輪郭に沿って濃い縁を付ける（水彩のエッジだまり） */
     float edge = smoothstep(0.44, 0.52, f) - smoothstep(0.56, 0.7, f);
-    col = mix(col, u_colInk, edge * 0.18);
+    col = mix(col, u_colInk, edge * 0.12);
 
     /* にじみの芯も少し濃くして深みを出す */
-    col = mix(col, u_colInk, smoothstep(0.66, 0.9, f) * 0.22);
+    col = mix(col, u_colInk, smoothstep(0.68, 0.92, f) * 0.16);
 
     /* 中央（文字の背後）は薄くして可読性を確保 */
     float d = distance(uv, vec2(0.5, 0.5));
