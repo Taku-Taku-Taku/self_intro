@@ -141,12 +141,13 @@ function initInk() {
     bg.appendChild(canvas);
 
     /* 輪郭が見える絵になったので描画解像度は表示の0.75倍（DPR上限は1.5のまま） */
-    const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
     const RENDER_SCALE = 0.75;
 
     function resize() {
-        const w = Math.max(1, Math.round(bg.clientWidth * DPR * RENDER_SCALE));
-        const h = Math.max(1, Math.round(bg.clientHeight * DPR * RENDER_SCALE));
+        /* DPRはモニタ間移動で変わるので毎回取得する */
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const w = Math.max(1, Math.round(bg.clientWidth * dpr * RENDER_SCALE));
+        const h = Math.max(1, Math.round(bg.clientHeight * dpr * RENDER_SCALE));
         if (canvas.width !== w || canvas.height !== h) {
             canvas.width = w;
             canvas.height = h;
@@ -158,18 +159,24 @@ function initInk() {
     new ResizeObserver(resize).observe(bg);
 
     const FRAME_MS = 1000 / 30; /* 30fps上限（モバイルの電池・発熱対策） */
-    const start = performance.now();
+    let simTime = 0; /* 描画していた時間だけを積算（停止からの復帰でジャンプさせない） */
+    let prevNow = null;
     let last = 0;
     let rafId = 0;
     let ready = false;
     let inView = true;
     let visible = !document.hidden;
+    let lost = false;
 
     function frame(now) {
         rafId = requestAnimationFrame(frame);
         if (now - last < FRAME_MS) return;
         last = now;
-        gl.uniform1f(uTime, (now - start) / 1000);
+        if (prevNow !== null) {
+            simTime += Math.min(now - prevNow, 100);
+        }
+        prevNow = now;
+        gl.uniform1f(uTime, simTime / 1000);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         if (!ready) {
             ready = true;
@@ -178,12 +185,13 @@ function initInk() {
     }
 
     function updateRunning() {
-        const shouldRun = inView && visible;
+        const shouldRun = inView && visible && !lost;
         if (shouldRun && rafId === 0) {
             rafId = requestAnimationFrame(frame);
         } else if (!shouldRun && rafId !== 0) {
             cancelAnimationFrame(rafId);
             rafId = 0;
+            prevNow = null;
         }
     }
 
@@ -195,6 +203,14 @@ function initInk() {
     document.addEventListener('visibilitychange', () => {
         visible = !document.hidden;
         updateRunning();
+    });
+
+    /* GPUリセット等でコンテキストが失われたら canvas を除去し、
+       CSSの静的グラデーションにフォールバックする */
+    canvas.addEventListener('webglcontextlost', () => {
+        lost = true;
+        updateRunning();
+        canvas.remove();
     });
 
     rafId = requestAnimationFrame(frame);

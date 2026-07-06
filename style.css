@@ -90,6 +90,9 @@ main {
 .hero img {
     width: 128px;
     margin: 0 auto var(--space-md);
+    border-radius: 10%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 12px rgba(26, 95, 122, 0.18);
 }
 
 .hero-eyebrow {
@@ -197,15 +200,11 @@ section ul+h2 {
     margin-block-start: var(--space-xl);
 }
 
-/* ===== プロフィール画像（角丸） ===== */
+/* ===== 画像の基本（装飾は .hero img 側で個別指定） ===== */
 img {
     display: block;
-    width: min(50%, 180px);
+    max-width: 100%;
     height: auto;
-    margin: var(--space-md) auto var(--space-lg);
-    border-radius: 10%;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 12px rgba(26, 95, 122, 0.18);
 }
 
 /* ===== リンク ===== */
