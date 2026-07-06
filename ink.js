@@ -14,11 +14,9 @@ precision highp float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform vec3 u_colBg;    /* ページ背景色（ヒーロー下端をここへ溶かす） */
-uniform vec3 u_colBase;  /* にじみのベース色 */
-uniform vec3 u_colTeal;  /* 青緑 */
-uniform vec3 u_colGreen; /* 緑 */
-uniform vec3 u_colBlue;  /* 青紫 */
+uniform vec3 u_colBg;   /* ページ背景色（ヒーロー下端をここへ溶かす） */
+uniform vec3 u_colBase; /* 余白の白 */
+uniform vec3 u_colInk;  /* 藍（インディゴ） */
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -51,30 +49,30 @@ void main() {
     vec2 p = uv;
     p.x *= u_resolution.x / u_resolution.y;
 
-    float t = u_time * 0.03;
+    float t = u_time * 0.025;
 
-    /* 2段のドメインワープでインクの筋を作る */
+    /* 中スケールのノイズ＋ワープで、中くらいのにじみが画面に数個散らばるようにする */
     vec2 q = vec2(
-        fbm(p * 1.4 + vec2(0.0, t)),
-        fbm(p * 1.4 + vec2(5.2, t * 1.3 + 1.3))
+        fbm(p * 1.1 + vec2(0.0, t)),
+        fbm(p * 1.1 + vec2(3.7, 1.9 - t))
     );
-    vec2 r = vec2(
-        fbm(p * 1.4 + 4.0 * q + vec2(1.7, 9.2 - t)),
-        fbm(p * 1.4 + 4.0 * q + vec2(8.3, 2.8 + t))
-    );
-    float f = fbm(p * 1.4 + 4.0 * r);
+    float f = fbm(p * 1.1 + 2.2 * q + vec2(t * 0.5, 0.0));
 
-    vec3 col = u_colBase;
-    col = mix(col, u_colTeal, smoothstep(0.25, 0.8, f));
-    col = mix(col, u_colGreen, smoothstep(0.3, 0.9, q.y) * 0.55);
-    col = mix(col, u_colBlue, smoothstep(0.4, 0.95, r.x) * 0.45);
+    /* しきい値を狭くとり、にじみの輪郭をはっきり出す（大部分は白い余白のまま） */
+    float ink = smoothstep(0.46, 0.58, f);
 
-    /* 淡い水彩トーンに引き戻す */
-    col = mix(u_colBase, col, 0.5);
+    vec3 col = mix(u_colBase, u_colInk, ink * 0.5);
 
-    /* 中央（文字の背後）はさらに薄くして可読性を確保 */
+    /* 輪郭に沿って濃い縁を付ける（水彩のエッジだまり） */
+    float edge = smoothstep(0.44, 0.52, f) - smoothstep(0.56, 0.7, f);
+    col = mix(col, u_colInk, edge * 0.18);
+
+    /* にじみの芯も少し濃くして深みを出す */
+    col = mix(col, u_colInk, smoothstep(0.66, 0.9, f) * 0.22);
+
+    /* 中央（文字の背後）は薄くして可読性を確保 */
     float d = distance(uv, vec2(0.5, 0.5));
-    col = mix(col, u_colBase, smoothstep(0.55, 0.05, d) * 0.4);
+    col = mix(col, u_colBase, smoothstep(0.6, 0.1, d) * 0.35);
 
     /* 下端はページ背景色へ溶かし、本文との境界を消す */
     col = mix(u_colBg, col, smoothstep(0.0, 0.22, uv.y));
@@ -129,20 +127,18 @@ function initInk() {
     gl.enableVertexAttribArray(aPos);
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
-    /* 睡蓮パレット（style.css のデザイントークンと対応） */
+    /* 藍一色：白い余白に藍の濃淡だけでにじませる */
     gl.uniform3fv(gl.getUniformLocation(program, 'u_colBg'), hexToRgb('#f7f8f6'));
-    gl.uniform3fv(gl.getUniformLocation(program, 'u_colBase'), hexToRgb('#eef4f3'));
-    gl.uniform3fv(gl.getUniformLocation(program, 'u_colTeal'), hexToRgb('#1a5f7a'));
-    gl.uniform3fv(gl.getUniformLocation(program, 'u_colGreen'), hexToRgb('#608d7a'));
-    gl.uniform3fv(gl.getUniformLocation(program, 'u_colBlue'), hexToRgb('#4a689e'));
+    gl.uniform3fv(gl.getUniformLocation(program, 'u_colBase'), hexToRgb('#fbfcfb'));
+    gl.uniform3fv(gl.getUniformLocation(program, 'u_colInk'), hexToRgb('#274b87'));
     const uResolution = gl.getUniformLocation(program, 'u_resolution');
     const uTime = gl.getUniformLocation(program, 'u_time');
 
     bg.appendChild(canvas);
 
-    /* にじみ絵なので低解像度で十分。DPRは1.5、描画は表示サイズの0.5倍に抑える */
+    /* 輪郭が見える絵になったので描画解像度は表示の0.75倍（DPR上限は1.5のまま） */
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    const RENDER_SCALE = 0.5;
+    const RENDER_SCALE = 0.75;
 
     function resize() {
         const w = Math.max(1, Math.round(bg.clientWidth * DPR * RENDER_SCALE));

@@ -68,10 +68,9 @@ main {
     inset: 0;
     z-index: -1;
     background:
-        radial-gradient(640px 320px at 15% 18%, rgba(26, 95, 122, 0.16), transparent 70%),
-        radial-gradient(520px 280px at 85% 30%, rgba(96, 141, 122, 0.14), transparent 70%),
-        radial-gradient(720px 360px at 50% 100%, rgba(74, 104, 158, 0.12), transparent 70%),
-        linear-gradient(180deg, #eef4f3, var(--color-bg));
+        radial-gradient(640px 320px at 15% 18%, rgba(39, 75, 135, 0.12), transparent 70%),
+        radial-gradient(560px 300px at 85% 35%, rgba(39, 75, 135, 0.08), transparent 70%),
+        linear-gradient(180deg, #fbfcfb, var(--color-bg));
 }
 
 .hero-bg canvas {
