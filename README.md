@@ -40,3 +40,9 @@ https://taku-taku-taku.com/ で公開（GitHub Pages + 独自ドメイン）
 
 ## デプロイ
 `main` ブランチへの push で GitHub Pages に自動反映
+
+## CI
+push / PR 時に GitHub Actions で自動チェック（`.github/workflows/ci.yml`）
+- `node --check`：ink.js の構文チェック
+- `html-validate`：HTMLの検証
+- `linkinator`：リンク切れチェック（ボットを弾く x.com は対象外）

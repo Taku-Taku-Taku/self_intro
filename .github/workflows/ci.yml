@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: JS構文チェック
+        run: node --check ink.js
+
+      - name: HTML検証（html-validate）
+        run: npx --yes html-validate@8 index.html
+
+      # x.com はボットからのアクセスを弾くことがあるため対象外にしている
+      - name: リンク切れチェック（linkinator）
+        run: >-
+          npx --yes linkinator@6 index.html
+          --verbosity error
+          --timeout 15000
+          --retry
+          --skip "x\.com"
