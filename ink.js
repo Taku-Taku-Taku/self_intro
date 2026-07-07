@@ -1,6 +1,7 @@
-// ヒーロー背景「インク水彩にじみ」演出（素のWebGL / 依存ライブラリなし）
+// 背景「インク水彩にじみ」演出（素のWebGL / 依存ライブラリなし）
+// 試験的にページ全体（.page-bg：ビューポート固定）へ適用中。
 // prefers-reduced-motion 指定時・WebGL非対応時は何もせず終了し、
-// CSS側の静的グラデーション（.hero-bg）がそのまま表示される。
+// CSS側の静的グラデーション（.page-bg）がそのまま表示される。
 
 const VERT_SRC = `
 attribute vec2 a_pos;
@@ -74,12 +75,10 @@ void main() {
     /* にじみの芯も少し濃くして深みを出す */
     col = mix(col, u_colInk, smoothstep(0.68, 0.92, f) * 0.16);
 
-    /* 中央（文字の背後）は薄くして可読性を確保 */
-    float d = distance(uv, vec2(0.5, 0.5));
-    col = mix(col, u_colBase, smoothstep(0.6, 0.1, d) * 0.35);
-
-    /* 下端はページ背景色へ溶かし、本文との境界を消す */
-    col = mix(u_colBg, col, smoothstep(0.0, 0.22, uv.y));
+    /* 中央の本文カラム（縦帯）は薄くして可読性を確保
+       （全画面固定なのでスクロール位置によらずテキスト背後が薄くなる） */
+    float d = abs(uv.x - 0.5);
+    col = mix(col, u_colBase, smoothstep(0.5, 0.12, d) * 0.4);
 
     gl_FragColor = vec4(col, 1.0);
 }
@@ -90,7 +89,7 @@ function hexToRgb(hex) {
 }
 
 function initInk() {
-    const bg = document.querySelector('.hero-bg');
+    const bg = document.querySelector('.page-bg');
     if (!bg) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 

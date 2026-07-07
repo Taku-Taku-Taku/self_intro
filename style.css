@@ -20,6 +20,9 @@
 
     /* レイアウト */
     --content-width: 720px;
+
+    /* 本文カードの下地の不透明度（0=インク素通し 〜 1=完全に隠す）調整用 */
+    --card-alpha: 0.25;
 }
 
 *,
@@ -46,9 +49,15 @@ body {
 }
 
 main {
-    max-width: var(--content-width);
-    margin-inline: auto;
-    padding: var(--space-xl) var(--space-md);
+    /* 本文の可読性を上げる半透明の下地（すりガラス）を全幅の帯として敷く。
+       コンテンツ自体は左右パディングで --content-width に中央寄せ。濃さは --card-alpha で調整。
+       上端はヒーローと自然に繋がるよう透明から徐々に立ち上げる */
+    padding: var(--space-xl) max(var(--space-md), calc((100% - var(--content-width)) / 2));
+    background: linear-gradient(180deg,
+        rgba(247, 248, 246, 0) 0,
+        rgba(247, 248, 246, var(--card-alpha)) 180px);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 /* ===== ヒーロー（ファーストビュー） ===== */
@@ -70,9 +79,10 @@ main {
     min-width: 0;
 }
 
-.hero-bg {
-    /* インク演出（ink.js）の下地兼フォールバックの静的グラデーション */
-    position: absolute;
+.page-bg {
+    /* インク演出（ink.js）の下地兼フォールバックの静的グラデーション
+       試験的にページ全体へ適用中：ビューポート全面に固定配置 */
+    position: fixed;
     inset: 0;
     z-index: -1;
     background:
@@ -81,7 +91,7 @@ main {
         linear-gradient(180deg, #fbfcfb, var(--color-bg));
 }
 
-.hero-bg canvas {
+.page-bg canvas {
     /* ink.js が生成するインク演出。初回フレーム描画後にフェードイン */
     position: absolute;
     inset: 0;
@@ -91,7 +101,7 @@ main {
     transition: opacity 0.8s ease;
 }
 
-.hero-bg canvas.is-ready {
+.page-bg canvas.is-ready {
     opacity: 1;
 }
 
@@ -192,10 +202,11 @@ main>section:last-child {
 
 /* ===== フッター（Link / Contact） ===== */
 footer {
-    max-width: var(--content-width);
-    margin-inline: auto;
-    padding: var(--space-lg) var(--space-md) var(--space-xl);
-    border-top: 1px solid var(--color-border);
+    /* main から途切れず続く全幅の帯。左右パディングの考え方は main と同じ */
+    padding: var(--space-lg) max(var(--space-md), calc((100% - var(--content-width)) / 2)) var(--space-xl);
+    background: rgba(247, 248, 246, var(--card-alpha));
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 footer>div {
