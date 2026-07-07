@@ -21,11 +21,12 @@ jobs:
       - name: HTML検証（html-validate）
         run: npx --yes html-validate@8 index.html
 
-      # x.com はボットからのアクセスを弾くことがあるため対象外にしている
+      # x.com はボット、温泉系・TRPG系の個人サイトは海外IPからのアクセスを
+      # 弾くことがある（ローカルからは200を確認済み）ため対象外にしている
       - name: リンク切れチェック（linkinator）
         run: >-
           npx --yes linkinator@6 index.html
           --verbosity error
           --timeout 15000
           --retry
-          --skip "x\.com"
+          --skip "x\.com|tarutama\.jp|yamabatoyu\.co\.jp|hongu\.jp|karasuba-sei\.biz"

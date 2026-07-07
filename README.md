@@ -45,4 +45,4 @@ https://taku-taku-taku.com/ で公開（GitHub Pages + 独自ドメイン）
 push / PR 時に GitHub Actions で自動チェック（`.github/workflows/ci.yml`）
 - `node --check`：ink.js の構文チェック
 - `html-validate`：HTMLの検証
-- `linkinator`：リンク切れチェック（ボットを弾く x.com は対象外）
+- `linkinator`：リンク切れチェック（ボットや海外IPを弾く一部サイトは対象外）
